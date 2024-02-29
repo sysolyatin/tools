@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+    	<title>Информация по cue-листу</title>
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<link rel="stylesheet" href="cue.css" media="screen">
+    	<link rel="stylesheet" href="cue.css" media="print">
+	</head>
+	<body>
+		<div class="content" id="fileLoadArea">
+			<h1>Получение печатной информации о CUE-листе из grandMA2</h1>
+
+			<div>
+				<form action="">
+			      	<div id="dropZone">сделайте в пульте экспорт секвенции в xml файл и перетащите его на это окно</div>
+			      	<div class="sentInfo">Все данные обрабатываются только в вашем браузере. Ничего не загружается на сервер.</div>
+			    </form>
+			</div>
+
+			<div class="copyright">
+				&copy <a href="https://sysolyatin.com/">Артем Сысолятин</a>, 2022<br>
+				Сервис работает в тестовом режиме. Если найдёте ошибку - напишите мне: artem@sysolyatin.com<br>
+				Все права на торговые марки принадлежат своим законным владельцам.<br><br>
+				<img src="made-in-russia-sign-ru.svg" width="200px"/>
+			</div>
+		</div>
+
+		<div class="content" id="printArea">
+			<div class="text-left">
+				<div class="printInfo">
+					Если таблица ниже пустая - значит выбран невалидный файл для конвертации.<br>
+					Для печати документа или его сохранения в формат PDF, нажмите ctrl+p (cmd+p).<br>
+					Для сохранения в PDF в списке принтеров выберете соответствующий параметр.<br>
+					Для конвертации нового документа обновите страницу. Это сообщение не будет напечатано.
+				</div>
+				<h2 id="cueListName">CueList</h2>
+				<table id="cueListTable">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Название</th>
+							<th>Время перехода</th>
+							<th>Комментарий</th>
+							<th>Триггер</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="cue.js?v=1"></script>
+	</body>
+</html>
