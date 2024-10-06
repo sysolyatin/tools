@@ -41,17 +41,20 @@ $(document).ready(function() {
             return false;
         }
         var reader = new FileReader();
-        reader.readAsBinaryString(file);
+        reader.readAsText(file);
         reader.onload = function(e) {
-            processingXml(e.target.result);
+            let xmlText = e.target.result;
+            if (xmlText.includes("<GMA3 DataVersion")) {
+                processingXmlGma3(xmlText);
+            } else {
+                processingXml(e.target.result);
+            }  
         };
     };
 
 
 
     function processingXml(fileData) {
-        // let mainTitle = fileData.match(/.+Sequ index.+\n/)[0].split('name="')[1].split('"')[0];
-        // let cueListData = fileData.replace(/[\r\n\t]+/g, '').match(/<Cue index=.+<\/Cue>/g);
         let xmlData = fileData.replace(/<Cue xsi.+\n/, '').replace(/[\r\n\t]+/g, '').match(/<Sequ index.+<\/Sequ>/)[0];
         let cueListXmlData = $.parseXML(xmlData);
         let cues = cueListXmlData.getElementsByTagName("Cue");
@@ -100,6 +103,64 @@ $(document).ready(function() {
             let comment = "";
             try {
                 comment = el.getElementsByTagName("InfoItems")[0].firstChild.textContent;
+            } catch (err) { }
+
+            $('#cueListTable tr:last').after(`<tr><td>${number}</td><td>${name}</td><td>${fade}</td><td>${comment}</td><td>${triggerMode} ${triigerTime}</td></tr>`);
+		}
+
+        $("#cueListName").html(mainTitle);
+        $("#fileLoadArea").hide();
+        $("#printArea").show();
+
+    }
+
+    function processingXmlGma3(fileData) {
+        let cueListXmlData = $.parseXML(fileData);
+        let cues = cueListXmlData.getElementsByTagName("Cue");
+
+        let mainTitle = "Cue-лист";
+        try {
+            mainTitle = cueListXmlData.getElementsByTagName("Sequence")[0].getAttribute("Name");
+            if (mainTitle === null) mainTitle = "Cue-лист";
+        } catch (err) { }
+
+        for (let ind = 0; ind < cues.length; ++ind) {
+            let el = cues[ind];
+
+            let number = "";
+            try {
+                number = el.getAttribute("No");
+                if (!number) continue;
+            } catch (err) { }
+
+            let name = "";
+            try {
+                name = el.getAttribute("Name");
+                if (name === null) name = `Cue #${number}`;
+            } catch (err) { }
+
+            let fade = "0";
+            try {
+                fade = el.getElementsByTagName("Part")[0].getAttribute("CueInFade");
+                if (!fade) fade = "0";
+            } catch (err) { }
+
+            let triggerMode = "";
+            try {
+                triggerMode = el.getAttribute("TrigType");
+                if (!triggerMode) triggerMode = ""
+            } catch (err) { }
+
+            let triigerTime = "";
+            try {
+                triigerTime = el.getAttribute("TrigTime");
+                if (!triigerTime) triigerTime = ""
+            } catch (err) { }
+
+            let comment = "";
+            try {
+                comment = el.getAttribute("Note");
+                if (!comment) comment = ""
             } catch (err) { }
 
             $('#cueListTable tr:last').after(`<tr><td>${number}</td><td>${name}</td><td>${fade}</td><td>${comment}</td><td>${triggerMode} ${triigerTime}</td></tr>`);
