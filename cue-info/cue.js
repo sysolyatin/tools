@@ -55,8 +55,7 @@ $(document).ready(function() {
 
 
     function processingXml(fileData) {
-        let xmlData = fileData.replace(/<Cue xsi.+\n/, '').replace(/[\r\n\t]+/g, '').match(/<Sequ index.+<\/Sequ>/)[0];
-        let cueListXmlData = $.parseXML(xmlData);
+        let cueListXmlData = $.parseXML(fileData);
         let cues = cueListXmlData.getElementsByTagName("Cue");
 
         let mainTitle = "Cue-лист";
@@ -101,8 +100,15 @@ $(document).ready(function() {
             } catch (err) { }
 
             let comment = "";
+            
             try {
-                comment = el.getElementsByTagName("InfoItems")[0].firstChild.textContent;
+                let infoItems = el.getElementsByTagName("InfoItems")[0];
+                if (infoItems) {
+                    let infoItem = infoItems.getElementsByTagName("Info")[0]
+                    if (infoItem) {
+                        comment = infoItem.innerHTML.replaceAll("\n", "<br>")
+                    }
+                }
             } catch (err) { }
 
             $('#cueListTable tr:last').after(`<tr><td>${number}</td><td>${name}</td><td>${fade}</td><td>${comment}</td><td>${triggerMode} ${triigerTime}</td></tr>`);
@@ -161,6 +167,7 @@ $(document).ready(function() {
             try {
                 comment = el.getAttribute("Note");
                 if (!comment) comment = ""
+                comment = comment.replaceAll("\n", "<br>")
             } catch (err) { }
 
             $('#cueListTable tr:last').after(`<tr><td>${number}</td><td>${name}</td><td>${fade}</td><td>${comment}</td><td>${triggerMode} ${triigerTime}</td></tr>`);
